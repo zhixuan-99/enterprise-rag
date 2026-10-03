@@ -1,0 +1,28 @@
+# 核心框架
+langchain>=0.2.11
+langchain-community>=0.2.11
+langchain-core>=0.2.30
+langchain-openai>=0.1.20
+langchain-huggingface>=0.1.0
+langchain-text-splitters>=0.2.2
+
+# Embedding（本地 BGE 模型）
+sentence-transformers>=3.0.1
+
+# 向量库
+faiss-cpu>=1.8.0
+
+# 评测
+ragas>=0.2.10
+datasets>=2.19.0
+
+# Agent 编排
+langgraph>=1.0
+
+# Web 服务
+fastapi>=0.110
+uvicorn>=0.29
+
+# 工具
+python-dotenv>=1.0.1
+pydantic>=2.7.0

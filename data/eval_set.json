@@ -1,0 +1,77 @@
+[
+  {
+    "question": "专业版每人每月多少钱？",
+    "ground_truth": "专业版每人每月 30 元。",
+    "reference": "专业版：每人每月 30 元，支持无限成员，存储 100GB，含视频会议（单场最长 4 小时）和流程审批。"
+  },
+  {
+    "question": "免费版最多可以添加多少名成员？",
+    "ground_truth": "免费版最多 10 名成员。",
+    "reference": "免费版：最多 10 名成员，存储空间 1GB，支持基础文档协作，不含视频会议。"
+  },
+  {
+    "question": "专业版单场视频会议最多支持多少人同时在线？",
+    "ground_truth": "专业版单场会议最多 300 人同时在线。",
+    "reference": "视频会议：专业版单场会议最多 300 人同时在线，支持屏幕共享和录制。"
+  },
+  {
+    "question": "平台对用户数据采用什么方式加密存储？",
+    "ground_truth": "所有用户数据采用 AES-256 加密存储，传输层使用 TLS 1.3。",
+    "reference": "所有用户数据采用 AES-256 加密存储，传输层使用 TLS 1.3。"
+  },
+  {
+    "question": "专业版视频会议的录制视频在云端保留多久？",
+    "ground_truth": "录制的视频在云端保留 30 天，之后自动删除。",
+    "reference": "录制的视频保存在云端，保留 30 天，之后自动删除。"
+  },
+  {
+    "question": "入职满一年的员工每年享有几天带薪年假？",
+    "ground_truth": "入职满 1 年的员工每年享有 5 天带薪年假，每多工作 1 年增加 1 天，上限 15 天。",
+    "reference": "年假：入职满 1 年的员工每年享有 5 天带薪年假，每多工作 1 年增加 1 天，上限 15 天。"
+  },
+  {
+    "question": "新员工的试用期是多长时间？",
+    "ground_truth": "新员工试用期为 3 个月，表现优秀可提前至 1 个月转正。",
+    "reference": "新员工试用期为 3 个月，表现优秀可提前至 1 个月转正。"
+  },
+  {
+    "question": "报销审批通过后，财务在几个工作日内打款？",
+    "ground_truth": "财务在 5 个工作日内打款。",
+    "reference": "报销流程：员工在 OA 提交报销单并附发票，直属上级审批后由财务在 5 个工作日内打款。"
+  },
+  {
+    "question": "员工每月累计迟到超过 3 次后，每次扣多少钱？",
+    "ground_truth": "每月累计迟到 3 次以内不扣款，超过部分每次扣 50 元。",
+    "reference": "每月累计迟到 3 次以内不扣款，超过部分每次扣 50 元。"
+  },
+  {
+    "question": "平台的 API 接口使用什么方式进行鉴权？",
+    "ground_truth": "统一使用 JWT Token 鉴权，在请求头 Authorization: Bearer <token> 中携带，Token 有效期 2 小时。",
+    "reference": "鉴权统一使用 JWT Token，在请求头 Authorization: Bearer <token> 中携带，Token 有效期 2 小时。"
+  },
+  {
+    "question": "平台后端使用什么数据库，版本要求是多少？",
+    "ground_truth": "数据库使用 PostgreSQL，版本不低于 14。",
+    "reference": "数据库使用 PostgreSQL，版本不低于 14。"
+  },
+  {
+    "question": "所有接口的默认限流规则是什么？",
+    "ground_truth": "所有接口必须限流，默认每用户每秒 10 次请求。",
+    "reference": "所有接口必须限流，默认每用户每秒 10 次请求。"
+  },
+  {
+    "question": "Git 提交信息的格式是什么？",
+    "ground_truth": "Git 提交信息格式为 <type>(<scope>): <subject>，type 取 feat/fix/docs/refactor 之一。",
+    "reference": "Git 提交信息格式：<type>(<scope>): <subject>，type 取 feat/fix/docs/refactor 之一。"
+  },
+  {
+    "question": "专业版和企业版支持几天的无理由退款？",
+    "ground_truth": "专业版和企业版支持 7 天无理由退款，从首次付款之日起计算。",
+    "reference": "专业版和企业版支持 7 天无理由退款，从首次付款之日起计算。"
+  },
+  {
+    "question": "服务到期后，用户数据会保留多少天？",
+    "ground_truth": "服务到期后数据保留 60 天，期间可续费恢复，超期数据将被永久删除。",
+    "reference": "服务到期后数据保留 60 天，期间可续费恢复，超期数据将被永久删除。"
+  }
+]

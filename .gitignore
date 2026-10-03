@@ -1,0 +1,16 @@
+# 密钥（严禁提交）
+.env
+
+# 向量索引（本地生成，可重新 ingest）
+data/faiss_index/
+# 历史会话数据库（本地生成）
+data/history.db
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# 模型缓存
+.cache/
