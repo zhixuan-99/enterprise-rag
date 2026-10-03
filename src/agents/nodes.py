@@ -108,7 +108,7 @@ def analyst_agent(state: AgentState) -> dict:
         )
     else:
         prompt = (
-            "你是企业知识库分析助手。当前没有检索到相关知识库内容，请基于对话历史和常识简要回答。\n\n"
+            "你是企业知识库分析助手。请直接、简洁地回答用户问题，一句话说明即可，不要重复、不要罗列。\n\n"
             f"【对话历史】\n{history}\n\n【当前问题】\n{question}\n\n【答案】"
         )
 
@@ -123,6 +123,14 @@ def evaluator_agent(state: AgentState) -> dict:
     context = state.get("context", "")
     answer = state.get("answer", "")
     retry_count = state.get("retry_count", 0)
+
+    # 无检索上下文（闲聊/常识直接回答）时，忠实度评测无意义，直接通过
+    if not context:
+        return {
+            "eval_pass": True,
+            "eval_feedback": "",
+            "retry_count": retry_count + 1,
+        }
 
     prompt = (
         "你是严格的评测员。判断下面答案的质量，只从两个维度看：\n"
