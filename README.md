@@ -8,7 +8,7 @@
 - **量化驱动**：每一步优化都用 RAGAS 打分对比，形成「优化 → 评测 → 对比」闭环
 - **质量闭环**：评测 Agent 会对答案自评，不通过就打回分析 Agent 重做（最多 3 次）
 - **多轮对话 + 历史管理**：多轮对话带上下文（支持指代消解），历史记录支持关键词搜索、分页、回显、清空
-- **真实踩坑**：完整记录了从环境搭建到评测的 6 个坑及解决方案
+- **真实踩坑**：完整记录了从环境搭建到评测的 5 个坑及解决方案
 
 ## 技术栈
 
@@ -81,7 +81,7 @@ enterprise-rag/
         └── graph.py    # LangGraph 图编排（含打回重做循环）
 ```
 
-> 向量索引默认存到 `C:\Users\30885\.cache\rag_index`，而非项目内（原因见踩坑 #2）。
+> 向量索引默认存到 `C:\Users\30885\.cache\rag_index`，而非项目内。
 
 ## 快速开始
 
@@ -158,7 +158,7 @@ python server.py
 | faithfulness | 答案是否忠于检索上下文 | ✅ 可靠（单次 LLM 判断） |
 | context_recall | 标准答案所需信息是否被检索到 | ✅ 可靠 |
 | context_precision | 相关上下文是否排在前面 | ⚠️ 有一定噪声 |
-| answer_relevancy | 答案是否切题 | ❌ 在 DeepSeek 下不可靠（见踩坑 #6） |
+| answer_relevancy | 答案是否切题 | ❌ 在 DeepSeek 下不可靠（见踩坑 #5） |
 
 ## 优化记录：三轮 prompt 迭代
 
@@ -192,16 +192,15 @@ faithfulness 从 0.64 → 1.0 的过程，体现了「忠实度 vs 相关性」�
 
 **核心结论**：context_precision 从 0.87 → 1.0，说明 Rerank 让最相关的 chunk 稳定排第一，这是「混合检索提升检索质量」的量化证据。
 
-## 踩坑清单（6 个，全部亲历）
+## 踩坑清单（5 个，全部亲历）
 
 | # | 坑 | 根因 | 解法 |
 |---|----|------|------|
 | 1 | Python 3.14 装不上 torch/faiss | 3.14 太新，二进制包没适配 | 用 Python 3.12 |
-| 2 | faiss 写索引失败 `No such file or directory` | faiss 的 C++ 底层无法读写中文路径 | 索引改存英文缓存目录 |
-| 3 | `No module named langchain_community.chat_models.vertexai` | ragas 0.4.3 与新 langchain-community 版本冲突 | evaluate.py 里注册 stub 模块绕过 |
-| 4 | HF 镜像不生效（仍连 huggingface.co） | HF_ENDPOINT 设置时机太晚，huggingface_hub import 时已固定 endpoint | 提前到 main.py 最顶部设置 |
-| 5 | DeepSeek 无法做 embedding | DeepSeek API 只有 LLM，无 embedding 接口 | 本地 BGE 模型 |
-| 6 | answer_relevancy 分数乱跳 | DeepSeek 不支持 n>1，ragas 降级成 1 个假设问题，噪声大 | 用 faithfulness 做主信号 |
+| 2 | `No module named langchain_community.chat_models.vertexai` | ragas 0.4.3 与新 langchain-community 版本冲突 | evaluate.py 里注册 stub 模块绕过 |
+| 3 | HF 镜像不生效（仍连 huggingface.co） | HF_ENDPOINT 设置时机太晚，huggingface_hub import 时已固定 endpoint | 提前到 main.py 最顶部设置 |
+| 4 | DeepSeek 无法做 embedding | DeepSeek API 只有 LLM，无 embedding 接口 | 本地 BGE 模型 |
+| 5 | answer_relevancy 分数乱跳 | DeepSeek 不支持 n>1，ragas 降级成 1 个假设问题，噪声大 | 用 faithfulness 做主信号 |
 
 ## 后续优化路线
 
