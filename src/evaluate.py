@@ -33,7 +33,7 @@ from ragas.metrics import (
 import config
 from src.models import get_embeddings, get_llm
 from src.pipeline import build_rag_chain
-from src.retriever import get_retriever
+from src.retriever import get_hybrid_retriever
 
 
 def run_eval():
@@ -42,7 +42,7 @@ def run_eval():
         eval_set = json.load(f)
 
     # 2. 逐条跑：拿到 answer + contexts（复用同一个 retriever，避免重复加载索引）
-    retriever = get_retriever()
+    retriever = get_hybrid_retriever()
     chain = build_rag_chain(retriever=retriever)
 
     questions, answers, contexts_list, ground_truths, references = [], [], [], [], []

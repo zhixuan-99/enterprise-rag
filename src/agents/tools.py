@@ -1,17 +1,7 @@
 """工具封装：把检索能力封装成 Agent 可调用的工具。"""
 from langchain_core.tools import tool
 
-from src.retriever import get_retriever
-
-_retriever = None
-
-
-def _get_cached_retriever():
-    """懒加载 + 缓存检索器，避免多次加载索引和 embedding 模型。"""
-    global _retriever
-    if _retriever is None:
-        _retriever = get_retriever()
-    return _retriever
+from src.retriever import get_hybrid_retriever
 
 
 @tool
@@ -21,7 +11,7 @@ def search_knowledge_base(query: str) -> str:
     把要查的关键信息写成一个明确的中文查询，例如"专业版的价格和功能"。
     可以针对一个问题多次调用本工具，每次用不同角度查询。
     """
-    retriever = _get_cached_retriever()
+    retriever = get_hybrid_retriever()  # lru_cache 缓存，不会重复加载
     docs = retriever.invoke(query)
     if not docs:
         return "未检索到相关内容。"

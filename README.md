@@ -17,6 +17,7 @@
 | LLM 生成 | DeepSeek（`deepseek-chat`） | OpenAI 兼容接口 |
 | Embedding | 本地 BGE（`bge-small-zh-v1.5`） | DeepSeek 无 embedding 接口，本地跑更贴合企业私有化 |
 | 向量库 | FAISS | 骨架期零部署，后续换 Qdrant |
+| 混合检索 | BM25 + RRF + Rerank | 关键词精确匹配 + 语义匹配 + 精排 |
 | 单链编排 | LangChain（LCEL） | retriever + prompt + llm 串成链 |
 | Agent 编排 | LangGraph | 3 个专家 Agent + 调度器，状态图 + 打回重做循环 |
 | Web 服务 | FastAPI | 桥接前端页面与 RAG / Agent |
@@ -68,7 +69,8 @@ enterprise-rag/
 └── src/
     ├── models.py       # LLM / Embedding 工厂
     ├── ingest.py       # 文档 → 切分 → 向量化 → 存 FAISS
-    ├── retriever.py    # 向量检索 top_k
+    ├── retriever.py    # 向量检索 + 混合检索入口
+    ├── hybrid_retriever.py  # 混合检索（BM25 + RRF + Rerank）
     ├── generator.py    # Prompt 模板
     ├── pipeline.py     # LCEL 组装 RAG 链
     ├── evaluate.py     # RAGAS 打分（含 ragas 版本冲突的 stub 绕过）
@@ -118,7 +120,7 @@ python main.py eval                            # RAGAS 评测
 python server.py
 ```
 
-浏览器打开 http://127.0.0.1:8000，即可在网页上提问（支持单链 RAG / 多 Agent 两种模式切换、多轮对话带上下文）。侧栏「历史记录」面板自动保存历史问答，支持关键词搜索、分页、点击回显、清空。
+浏览器打开 http://127.0.0.1:8000，即可在网页上提问（多 Agent 编排、流式输出、多轮对话带上下文）。侧栏「历史记录」面板自动保存历史问答，支持关键词搜索、分页、点击回显、清空。
 
 ## 多 Agent 系统
 
@@ -177,6 +179,18 @@ faithfulness 从 0.64 → 1.0 的过程，体现了「忠实度 vs 相关性」�
 
 1. 来源标注会反噬 faithfulness 评测。
 2. answer_relevancy 从 0.90 一路跌到 0.61，但人工抽查答案质量明明很好（如"员工手册里规定了哪几种假期？"→ 完整列出 5 种）。结论：**该指标在 DeepSeek n=1 限制下已失真，faithfulness 才是可靠的优化信号，answer_relevancy 用人工抽查兜底。**
+
+## 混合检索 + Rerank 优化
+
+纯向量检索对「精确词匹配」会漏（如型号、编号、专有名词），加 BM25 关键词检索 + RRF 融合 + bge-reranker 精排后：
+
+| 指标 | 纯向量(v3) | 混合检索+Rerank | 变化 |
+|------|-----------|----------------|------|
+| context_precision | 0.8718 | **1.0000** | 涨到满分 |
+| context_recall | 1.0000 | 1.0000 | 持平 |
+| faithfulness | 1.0000 | 1.0000 | 持平 |
+
+**核心结论**：context_precision 从 0.87 → 1.0，说明 Rerank 让最相关的 chunk 稳定排第一，这是「混合检索提升检索质量」的量化证据。
 
 ## 踩坑清单（6 个，全部亲历）
 

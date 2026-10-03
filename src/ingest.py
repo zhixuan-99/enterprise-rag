@@ -1,4 +1,6 @@
 """文档入库：加载 docs 目录的 .md 文件 -> 切分 -> embedding -> 存 FAISS。"""
+import pickle
+
 from langchain_community.document_loaders import TextLoader
 from langchain_community.vectorstores import FAISS
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -38,4 +40,10 @@ def build_index():
     vectorstore = FAISS.from_documents(chunks, embeddings)
     config.INDEX_DIR.mkdir(parents=True, exist_ok=True)
     vectorstore.save_local(str(config.INDEX_DIR))
+
+    # 保存 chunk 列表（供 BM25 混合检索使用）
+    with open(config.CHUNKS_PATH, "wb") as f:
+        pickle.dump(chunks, f)
+
     print(f"[ingest] 索引已保存到 {config.INDEX_DIR}")
+    print(f"[ingest] chunk 列表已保存到 {config.CHUNKS_PATH}")
